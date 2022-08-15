@@ -38,3 +38,15 @@ $ pip install ./testProject
 
 * Support authors and licenses in `pyproject.toml`. Currently having issues with serializing maps into toml.
 * Sub-command `add <library-name>`: Add a dependency to the project's `requirements.txt` file (and `pyproject.toml` or `setup.cfg`), and install it through pip if needed.
+
+## Installation
+
+### From source
+
+```bash
+$ git clone https://github.com/ethanavatar/carpy.git
+$ cd carpy
+$ cargo build --release
+```
+
+The executable is available at `target/release/carpy.exe`
