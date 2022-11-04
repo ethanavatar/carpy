@@ -1,44 +1,15 @@
+mod consts;
+use consts::{*};
+
 use std::fs::{self, File};
-use std::io::{self, Write};
+use std::io::{self, Read, Write};
 use std::path::PathBuf;
 use clap::{App, Arg, SubCommand};
 use toml;
 use serde_derive::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-const MAIN_CONTENTS: &[u8] =
-b"def main():
-    print(\"Hello, world!\")
-
-if __name__ == \"__main__\":
-    main()
-";
-
-const TEST_SAMPLE_CONTENTS: &[u8] =
-b"import pytest
-
-def inc(x):
-    return x + 1
-
-@pytest.mark.xfail(reason = \"Bug with arithmetic\")
-def test_answer():
-    assert inc(3) == 5
-";
-
-const SETUP_PY_CONTENTS: &[u8] =
-b"from setuptools import setup
-
-if __name__ == \"__main__\":
-    setup()
-";
-
-#[derive(Serialize, Deserialize)]
-struct PyProject {
-    #[serde(rename = "build-system")]
-    build_system: BuildSystem,
-
-    project: Project,
-}
+use std::process::Command;
 
 #[derive(Serialize, Deserialize)]
 struct BuildSystem {
@@ -46,6 +17,14 @@ struct BuildSystem {
 
     #[serde(rename = "build-backend")]
     build_backend: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct PyProject {
+    #[serde(rename = "build-system")]
+    build_system: BuildSystem,
+
+    project: Project,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -59,6 +38,19 @@ struct Project {
     #[serde(rename = "requires-python")]
     requires_python: String,
     classifiers: Vec<String>,
+}
+
+fn add_dependency(name: &str) -> io::Result<()> {
+    unimplemented!();
+    
+    let mut requirements = File::open("requirements.txt")?;
+    let mut contents = String::new();
+    requirements.read_to_string(&mut contents)?;
+    let mut deps: Vec<&str> = contents.split_whitespace().collect();
+
+    deps.append(&mut vec![name]);
+
+    Ok(())
 }
 
 fn initialize_package(path: PathBuf) -> Result<(), io::Error> {
@@ -110,6 +102,12 @@ fn initialize_package(path: PathBuf) -> Result<(), io::Error> {
 
     let mut setup_py = File::create(path.join("setup.py"))?;
     setup_py.write(SETUP_PY_CONTENTS)?;
+
+    let mut _output = Command::new("git")
+        .args(&["init", "."])
+        .current_dir(path.clone())
+        .output()
+        .expect("Failed to initialize git repository");
 
     Ok(())
 }
