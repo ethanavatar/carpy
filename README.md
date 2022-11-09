@@ -7,7 +7,7 @@ A package creation tool for Python inspired by Cargo
 New python packages can be created with the `init` command
 
 ```bash
-$ ./carpy init testProject
+$ carpy init testProject
 Initializing package: testProject
 Done
 ```
@@ -32,7 +32,7 @@ testProject/
 Dependencies can be added with the `add` command
 
 ```bash
-$ ./carpy add numpy
+$ carpy add numpy
 ...
 $ cat ./requirements.txt
 numpy==1.23.4
