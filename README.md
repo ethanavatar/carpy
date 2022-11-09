@@ -19,6 +19,7 @@ $ tree ./testProject
 testProject/
 ├── pyproject.toml
 ├── setup.py
+├── requirements.txt
 ├── src
 │   └── testProject
 │       ├── __init__.py
@@ -26,6 +27,15 @@ testProject/
 └── tests
     ├── __init__.py
     └── test_sample.py
+```
+
+Dependencies can be added with the `add` command
+
+```bash
+$ ./carpy add numpy
+...
+$ cat ./requirements.txt
+numpy==1.23.4
 ```
 
 The project is initialized all the files necessary for a project to be a valid python project, and it can be installed directly using:
@@ -37,7 +47,7 @@ $ pip install ./testProject
 ## TODO Features
 
 - [ ] Support authors and licenses in `pyproject.toml`. Currently having issues with serializing maps into toml.
-- [ ] Sub-command `add <library-name>`: Add a dependency to the project's `requirements.txt` file (and `pyproject.toml` or `setup.cfg`), and install it through pip if needed.
+- [p] Sub-command `add <library-name>`: Add a dependency to the project's `requirements.txt` file (and `pyproject.toml` or `setup.cfg`), and install it through pip if needed.
 
 ## Installation
 
@@ -47,6 +57,5 @@ $ pip install ./testProject
 $ git clone https://github.com/ethanavatar/carpy.git
 $ cd carpy
 $ cargo build --release
+$ cargo install --path .
 ```
-
-The executable is available at `target/release/carpy.exe`

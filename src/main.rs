@@ -71,7 +71,7 @@ fn add_dependency(name: &str, project_root: PathBuf, create: bool) -> io::Result
         requirements.read_to_string(&mut contents)?;
 
         // appending to avoid a compiler warning about unused initializations
-        deps.append(&mut contents.lines().collect());
+        deps.append(&mut contents.lines().collect::<Vec<&str>>());
 
         // `requirements` is dropped here
     }
@@ -79,9 +79,10 @@ fn add_dependency(name: &str, project_root: PathBuf, create: bool) -> io::Result
     println!("Installing package: {}", name);
 
     // No need to save the result of this command because it is just to make sure the package is installed
+    // TODO: ability to change the python command
     Command::new("python3")
         .args(&["-m", "pip", "install", name])
-        .current_dir(path.clone())
+        .current_dir(project_root.clone())
         .output()
         .expect("Failed to install dependency");
 
@@ -90,7 +91,7 @@ fn add_dependency(name: &str, project_root: PathBuf, create: bool) -> io::Result
     // TODO: ability to change the python command
     let freeze = Command::new("python3")
         .args(&["-m", "pip", "freeze"])
-        .current_dir(path.clone())
+        .current_dir(project_root.clone())
         .output()
         .expect("Failed to freeze dependencies")
         .stdout;
